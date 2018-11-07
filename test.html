@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <title>upmobile - HTML mobile template</title>
+        <link rel="stylesheet" href="css/framework7.css">
+        <link rel="stylesheet" href="style.css">
+        <link type="text/css" rel="stylesheet" href="css/swipebox.css" />
+        <link type="text/css" rel="stylesheet" href="css/animations.css" />
+        <style type="text/css">
+            .content-block {
+                padding-top: 75px;
+            }
+
+            .loginform a {
+                width: 100%;
+                margin: 10px 0 0 0;
+                text-align: center;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 700;
+                -webkit-appearance: none;
+                border: 2px #FF8100 solid;
+                background-color:  #578E19;
+                color: #fff;
+                font-weight: 300;
+                font-size: 16px;
+                padding: 12px 50px;
+                border-radius: 15px;
+            }
+
+            .loginform input.form_input {
+                margin: 0 0 17px 0;
+                border-bottom: 1px solid #FF8100;
+                color: #000000;
+                font-size: 15px;
+            }
+
+            label.label-checkbox input[type="checkbox"]:checked + .item-media i.icon-form-checkbox, label.label-checkbox input[type="radio"]:checked + .item-media i.icon-form-checkbox {
+                border: none;
+                background-color: #FF8100;
+            }
+        </style>
+    </head>
+    <!--body id="mobile_wrap" style="background-image: url(images/bg.jpg);"-->
+    <body id="mobile_wrap">
+
+        <div class="">
+            <div class="content-block">
+                <h4 style="text-align: center;"> <img src="img/logo.png" /></h4>
+                <br/>
+                <div id="userConnected" style="color: #000000; text-align: center">Bienvenue</div>
+                <br/>
+                <div style="" class="loginform" id="loginForm">
+                    <form id="LoginForm" method="post">
+                        <input type="number" id="matricule" name="matricule" value="" class="form_input required" placeholder="Matricule" />
+                        <input type="password"  id="password" name="password" value="" class="form_input required" placeholder="Mot de passe" />
+                        <input type="hidden"  id="firstconnexion" name="firstconnexion" value="1" />
+                        <label class="label-checkbox item-content" style="text-align: right">
+                            <!-- Checked by default -->
+                            <input type="checkbox" id="connecte" name="connecte" value="1" />
+                            <div class="item-media" style="width: 50%; text-align: right; float: left">
+                                <i class="icon icon-form-checkbox"></i>
+                            </div>
+                            <div class="item-inner" style="text-align: left; vertical-align: middle; padding-top: 2px; font-weight: bold">
+                                <div class="item-title">  &nbsp;Rester connecté ?</div>
+                            </div>
+                        </label>
+                        <br/><br/>
+                        <div style="width: 100%; text-align: center">
+                            <a  class="" onclick="connexion($('#matricule').val(), $('#password').val())"  id="connexion">SE CONNECTER</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div style="text-align: center; display: none" id="loading"  class="loginform">
+                    <br/><br/>
+                    <img src="img/loading.gif"  style="width: 100%;"/>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <!--script type="text/javascript" src="js/my-app.js"></script-->
+        <script type="text/javascript">
+                                function quitter() {
+                                    if (confirm("Voulez-vous vraiment quitter l'application ?")) {
+                                        navigator.app.exitApp();
+                                    }
+                                }
+
+
+
+                                function connexion(matricule, password) {
+                                    connectFromServer(matricule, password);
+                                }
+
+
+
+                                function connectFromServer(matricule, passclear, ) {
+
+                                    jQuery.ajax({
+                                        url: 'http://server.r2s-sonatel.com/connexion.php',
+                                        dataType: 'JSON',
+                                        type: 'GET',
+                                        data: 'matricule=28225&password=0KZ8C8Z',
+                                        success: function (resultat) {
+                                            alert(resultat.photos.length + ' Photos');
+
+                                        },
+                                        error: function (xhr, status, error) {
+                                            var errorMessage = xhr.status + ': ' + xhr.statusText
+                                            alert('Error - ' + errorMessage + '<-->' + error.message);
+                                            alert('une erreur est survenue lors de la recupération des donnees en ligne. Verifiez votre connexion internet: ' + errorMessage);
+                                        },
+                                        //     timeout: 1500000
+                                    });
+                                }
+        </script>
+    </body>
+</html>

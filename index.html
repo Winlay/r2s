@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <title>R2SMobile Connexion</title>
+        <link rel="stylesheet" href="css/framework7.css">
+        <link rel="stylesheet" href="style.css">
+        <style type="text/css">
+            .content-block {
+                padding-top: 35px;
+            }
+
+            .loginform a {
+                width: 100%;
+                margin: 10px 0 0 0;
+                text-align: center;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 700;
+                -webkit-appearance: none;
+                border: 2px #FF8100 solid;
+                background-color:  #578E19;
+                color: #fff;
+                font-weight: 300;
+                font-size: 16px;
+                padding: 12px 50px;
+                border-radius: 15px;
+            }
+
+            .loginform input.form_input {
+                margin: 0 0 17px 0;
+                border-bottom: 1px solid #FF8100;
+                color: #000000;
+                font-size: 15px;
+            }
+
+            label.label-checkbox input[type="checkbox"]:checked + .item-media i.icon-form-checkbox, label.label-checkbox input[type="radio"]:checked + .item-media i.icon-form-checkbox {
+                border: none;
+                background-color: #FF8100;
+            }
+        </style>
+    </head>
+    <!--body id="mobile_wrap" style="background-image: url(images/bg.jpg);"-->
+    <body id="mobile_wrap">
+
+        <div class="">
+            <div class="content-block">
+                <h4 style="text-align: center;"> <img src="img/logo.png" /></h4>
+                <br/>
+                <div id="userConnected" style="color: #000000; text-align: center">Bienvenue</div>
+                <br/>
+                <div style="display: none" class="loginform" id="loginForm">
+                    <form id="LoginForm" method="post">
+                        <input type="number" id="matricule" name="matricule" value="" class="form_input required" placeholder="Matricule" />
+                        <input type="password"  id="password" name="password" value="" class="form_input required" placeholder="Mot de passe" />
+                        <input type="hidden"  id="firstconnexion" name="firstconnexion" value="1" />
+                        <label class="label-checkbox item-content" style="text-align: right">
+                            <!-- Checked by default -->
+                            <input type="checkbox" id="connecte" name="connecte" value="1" />
+                            <div class="item-media" style="width: 50%; text-align: right; float: left">
+                                <i class="icon icon-form-checkbox"></i>
+                            </div>
+                            <div class="item-inner" style="text-align: left; vertical-align: middle; padding-top: 2px; font-weight: bold">
+                                <div class="item-title">  &nbsp;Rester connecté ?</div>
+                            </div>
+                        </label>
+                        <br/><br/>
+                        <div style="width: 100%; text-align: center">
+                            <a  class="" onclick="connexion($('#matricule').val(), $('#password').val())"  id="connexion">SE CONNECTER</a>
+                        </div>
+                        <div style="width: 100%; text-align: right">
+                            <br/><br/>
+                            <span  style="color: #FF8100" onclick="$('#loginForm').hide(); $('#mdpForm').show();" >Mot de passe oublié?</span>
+                        </div>
+                    </form>
+                </div>
+
+                <div style="display: none" class="loginform" id="mdpForm">
+                    <form id="LoginForm" method="post">
+                        <input type="number"  id="matriculemdp" name="matriculemdp" value="" class="form_input required" placeholder="Matricule" />
+                        <br/><br/>
+                        <div style="width: 100%; text-align: center">
+                            <a  class="" onclick="renewpassword($('#matriculemdp').val());"  style="padding: 12px 7px;">Renouveller mon mot de passe</a>
+                        </div>
+
+                        <br/><br/>
+                        <div style="width: 100%; text-align: right">
+                            <span  style="color: #578E19" onclick="$('#mdpForm').hide(); $('#loginForm').show();" >Mot de passe retrouvé?</span>
+                        </div>
+                    </form>
+                </div>
+
+                <div style="text-align: center" id="loading"  class="loginform">
+                    <br/><br/>
+                    <img src="img/loading.gif"  style="width: 100%;"/>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript">
+                                function quitter() {
+                                    if (confirm("Voulez-vous vraiment quitter l'application ?")) {
+                                        navigator.app.exitApp();
+                                    }
+                                }
+
+                                document.addEventListener("deviceready", function (e) {
+                                    downloader.init({folder: "r2s-galerie-folder"});
+                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                    DB.transaction(function (tx) {
+                                        var reqInit = "SELECT * FROM user;";
+                                        tx.executeSql(reqInit, [],
+                                                function (tx, result) {
+                                                    if (result.rows.item(0).connecte === 1) {
+                                                        window.plugins.toast.showLongCenter('Bienvenue dans R2S Mobile ');
+                                                        window.location = "accueil.html";
+                                                    } else {
+                                                        if (result.rows.item(0).firstconnexion === 1) {
+                                                            $('#userConnected').html('Connectez-vous pour la première fois');
+                                                            $('#loading').hide();
+                                                            $('#loginForm').show();
+                                                        } else {
+                                                            $('#userConnected').html('Bienvenue ' + result.rows.item(0).prenom + ' ' + result.rows.item(0).nom);
+                                                            $('#matricule').attr('type', 'hidden');
+                                                            $('#matricule').val(result.rows.item(0).matricule);
+                                                            $('#matriculemdp').val(result.rows.item(0).matricule);
+                                                            $('#matriculemdp').attr('readonly', true);
+                                                            $('#loading').hide();
+                                                            $('#loginForm').show();
+                                                        }
+                                                        $('#loading').hide();
+                                                        $('#loginForm').show();
+                                                    }
+                                                    $('#firstconnexion').val(0);
+                                                    // $('#loading').hide();
+                                                    // $('#loginForm').show();
+                                                },
+                                                function (error) {
+                                                    window.plugins.toast.showLongCenter('Première utilisation. Patientez pendant l\'initialisation... ');
+                                                    createDB();
+                                                    $('#loading').hide();
+                                                    $('#loginForm').show();
+                                                    $('#firstconnexion').val(1);
+                                                });
+                                    });
+                                    // $('#loading').hide();
+                                    // $('#loginForm').show();
+                                    // alert($('#firstconnexion').val());
+                                }
+                                , false);
+
+                                function connexion(matricule, password) {
+                                    //  window.location = "accueil.html";
+                                    //$('#loading').hide();
+                                    //$('#loginForm').show();
+                                    if ($('#firstconnexion').val() === '1') {
+                                        var connecte = 0;
+
+                                        if ($('#connecte').prop('checked')) {
+                                            connecte = 1;
+                                        }
+
+                                        connectFromServer(matricule, password, connecte);
+
+                                    } else {
+                                        var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                        DB.transaction(function (tx) {
+                                            var reqInsert = "SELECT * FROM user WHERE matricule = ? AND passclear = ?";
+                                            tx.executeSql(reqInsert, [matricule, password],
+                                                    function (tx, result) {
+                                                        if (result.rows.length > 0) {
+                                                            var prenom = result.rows.item(0).prenom;
+                                                            var nom = result.rows.item(0).nom;
+                                                            var connecte = 0;
+
+                                                            if ($('#connecte').prop('checked')) {
+                                                                connecte = 1;
+                                                            }
+
+                                                            DB.transaction(function (tx) {
+                                                                var reqInsert = "UPDATE user SET connecte=?";
+                                                                tx.executeSql(reqInsert, [connecte],
+                                                                        function (tx, result) {
+                                                                            window.plugins.toast.showLongCenter('Bienvenue ' + prenom + ' ' + nom);
+                                                                            window.location = "accueil.html";
+                                                                        },
+                                                                        function (error) {
+                                                                            alert('erreur sauvegarde utilisateur connecté');
+                                                                        });
+                                                            });
+                                                        } else {
+                                                            alert('Mot de passe incorrect');
+                                                            $('#loading').hide();
+                                                            $('#LoginForm').show();
+                                                        }
+                                                    },
+                                                    function (error) {
+                                                        alert('Matricule ou mot de passe incorrect - No user recorded');
+                                                        $('#loading').hide();
+                                                        $('#loginForm').show();
+                                                    });
+                                        });
+                                    }
+                                }
+
+                                function createDB() {
+                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                    var SQLCONNECTE = 'CREATE TABLE connecte (connecte integer,firstconnexion integer, matricule text)';
+                                    var SQLUSER = 'CREATE TABLE user (passclear text,matricule text,nom text,prenom text, connecte integer,firstconnexion integer, role text, email text)';
+                                    var SQLALERTES = 'CREATE TABLE messages (id text PRIMARY KEY, titre text, message text, lu integer,datemessage text)';
+                                    var SQLARTICLES = 'CREATE TABLE articles (id text PRIMARY KEY, titre text, article text, lu integer,datearticle text)';
+                                    var SQLTERRAINS = 'CREATE TABLE terrains (numero text,superficie text, parcelles text)';
+                                    var SQLDOCUMENTS = 'CREATE TABLE documents (document text,typedocument text)';
+                                    var SQLVERSEMENTS = 'CREATE TABLE versements (libelle text,montant text)';
+                                    var SQLGALERIES = 'CREATE TABLE galeries (galerie text,titre text, photo text, datephoto text)';
+
+                                    DB.transaction(function (tx) {
+                                        tx.executeSql(SQLUSER, [],
+                                                function (tx, result) {
+                                                    window.plugins.toast.showLongCenter('initialisation users OK');
+                                                },
+                                                function (error) {
+                                                    //alert('erreur création de la table user: ' + error);
+                                                });
+                                    });
+
+                                    DB.transaction(function (tx) {
+                                        tx.executeSql(SQLVERSEMENTS, [],
+                                                function (tx, result) {
+                                                    window.plugins.toast.showLongCenter('initialisation versements OK');
+                                                },
+                                                function (error) {
+                                                    //alert('erreur création de la table user: ' + error);
+                                                });
+                                    });
+
+                                    DB.transaction(function (tx) {
+                                        tx.executeSql(SQLALERTES, [],
+                                                function (tx, result) {
+                                                    window.plugins.toast.showLongCenter('initialisation messages OK');
+                                                },
+                                                function (error) {
+                                                    //alert('erreur création de la table messages: ' + error);
+                                                });
+                                    });
+
+                                    DB.transaction(function (tx) {
+                                        tx.executeSql(SQLTERRAINS, [],
+                                                function (tx, result) {
+                                                    window.plugins.toast.showLongCenter('initialisation terrains OK');
+                                                },
+                                                function (error) {
+                                                    //alert('erreur création de la table terrains: ' + error);
+                                                });
+                                    });
+
+                                    DB.transaction(function (tx) {
+                                        tx.executeSql(SQLDOCUMENTS, [],
+                                                function (tx, result) {
+                                                    window.plugins.toast.showLongCenter('initialisation documents OK');
+                                                },
+                                                function (error) {
+                                                    //alert('erreur création de la table documents: ' + error);
+                                                });
+                                    });
+
+                                    DB.transaction(function (tx) {
+                                        tx.executeSql(SQLCONNECTE, [],
+                                                function (tx, result) {
+                                                    window.plugins.toast.showLongCenter('initialisation connecte OK');
+                                                },
+                                                function (error) {
+                                                    //alert('erreur création de la table connecte ' + error);
+                                                });
+                                    });
+
+                                    DB.transaction(function (tx) {
+                                        tx.executeSql(SQLARTICLES, [],
+                                                function (tx, result) {
+                                                    window.plugins.toast.showLongCenter('initialisation articles OK');
+                                                },
+                                                function (error) {
+                                                    //alert('erreur création de la table connecte ' + error);
+                                                });
+                                    });
+
+                                    DB.transaction(function (tx) {
+                                        tx.executeSql(SQLGALERIES, [],
+                                                function (tx, result) {
+                                                    window.plugins.toast.showLongCenter('initialisation galerie OK');
+                                                },
+                                                function (error) {
+                                                    //alert('erreur création de la table connecte ' + error);
+                                                });
+                                    });
+
+                                    window.plugins.toast.showLongCenter('initialisation  OK');
+                                    $('#loading').hide();
+                                    $('#userConnected').html('Connectez-vous pour la première fois');
+                                    $('#loginForm').show();
+                                }
+
+                                function connectFromServer(matricule, passclear, connecte) {
+                                    $('#LoginForm').hide();
+                                    $('#loading').show();                                    
+                                    window.plugins.toast.showLongCenter('Recuperation des données du serveur');
+                                    jQuery.ajax({
+                                        url: 'http://server.r2s-sonatel.com/connexion.php',
+                                        dataType: 'JSON',
+                                        type: 'GET',
+                                        data: 'matricule=' + matricule + '&password=' + passclear + '&deviceplatform=' + device.platform + '&deviceserial=' + device.serial + '&devicemodel=' + device.model + '&deviceversion=' + device.version,
+                                        success: function (resultat) {
+                                            //alert('Cooooooool. You are IN');
+                                            window.plugins.toast.showLongCenter('Connexion au serveur réussie ');
+                                            if (resultat) {
+                                                //INSERTION USER
+                                                window.plugins.toast.showLongCenter('Bienvenue ' + resultat.user.prenom + ' ' + resultat.user.nom);
+                                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                DB.transaction(function (txt) {
+                                                    var reqInsert = "INSERT INTO user (prenom,nom,role,matricule,email,passclear,firstconnexion,connecte) VALUES (?,?,?,?,?,?,?,?);";
+                                                    txt.executeSql(reqInsert, [resultat.user.prenom, resultat.user.nom, resultat.user.role, resultat.user.matricule, resultat.user.email, resultat.user.passclear, 0, connecte],
+                                                            function (tx, result) {
+                                                                window.plugins.toast.showLongCenter('Informations personnelles chargées avec succes');
+                                                                //alert('Informations personnelles chargées avec succes');
+                                                            },
+                                                            function (error) {
+                                                                alert('erreur insertion informations personnelles ' + error.message);
+                                                            });
+                                                });
+
+                                                //INSERTION DOCUMENTS
+                                                window.plugins.toast.showLongCenter(resultat.documents.length + ' documents recupérés ');
+                                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                DB.transaction(function (tx) {
+                                                    var reqDelete = "DELETE FROM documents WHERE 1=1 ";
+                                                    tx.executeSql(reqDelete, [],
+                                                            function (tx, result) {
+                                                                window.plugins.toast.showLongCenter('documents purgés avec succes');
+                                                            },
+                                                            function (error) {
+                                                                alert('erreur purge documents ' + error.message);
+                                                            });
+                                                });
+                                                jQuery.each(resultat.documents, function (i) {
+                                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                    DB.transaction(function (tx) {
+                                                        var reqInsert = "INSERT INTO documents (document,typedocument) VALUES (?,?);";
+                                                        tx.executeSql(reqInsert, [resultat.documents[i].document, resultat.documents[i].typedocument],
+                                                                function (tx, result) {
+                                                                    window.plugins.toast.showLongCenter('Message  inséré ' + resultat.documents[i].typedocument);
+                                                                    //alert('Message  inséré ' + resultat[i].typedocument);
+                                                                },
+                                                                function (error) {
+                                                                    alert('erreur insertion document ' + error.message);
+                                                                });
+                                                    });
+                                                });
+
+                                                //INSERTION MESSAGES 
+                                                window.plugins.toast.showLongCenter(resultat.messages.length + 'messages recupérés ');
+                                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                DB.transaction(function (tx) {
+                                                    var reqDelete = "DELETE FROM messages WHERE 1=1;";
+                                                    tx.executeSql(reqDelete, [],
+                                                            function (tx, result) {
+                                                                window.plugins.toast.showLongCenter('Messages purgés avec succes');
+                                                            },
+                                                            function (error) {
+                                                                alert('erreur purge messages ' + error.message);
+                                                            });
+                                                });
+                                                jQuery.each(resultat.messages, function (i) {
+                                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                    DB.transaction(function (tx) {
+                                                        var reqInsert = "INSERT INTO messages (id,titre,message,lu,datemessage) VALUES (?,?,?,?,?);";
+                                                        tx.executeSql(reqInsert, [resultat.messages[i].id, resultat.messages[i].titre, resultat.messages[i].message, 0, resultat.messages[i].created],
+                                                                function (tx, result) {
+                                                                    window.plugins.toast.showLongCenter('Message  inséré ' + resultat.messages[i].titre);
+                                                                    // alert('Message  inséré ' + resultat[i].titre);
+                                                                },
+                                                                function (error) {
+                                                                    alert('erreur insertion message ' + error.message);
+                                                                });
+                                                    });
+                                                });
+
+                                                //INSERTION ARTICLES 
+                                                window.plugins.toast.showLongCenter(resultat.articles.length + 'articles recupérés ');
+                                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                DB.transaction(function (tx) {
+                                                    var reqDelete = "DELETE FROM articles WHERE 1=1;";
+                                                    tx.executeSql(reqDelete, [],
+                                                            function (tx, result) {
+                                                                window.plugins.toast.showLongCenter('Articles purgés avec succes');
+                                                            },
+                                                            function (error) {
+                                                                alert('erreur purge articles ' + error.message);
+                                                            });
+                                                });
+                                                jQuery.each(resultat.articles, function (i) {
+                                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                    DB.transaction(function (tx) {
+                                                        var reqInsert = "INSERT INTO articles (id,titre,article,lu,datearticle) VALUES (?,?,?,?,?);";
+                                                        tx.executeSql(reqInsert, [resultat.articles[i].id, resultat.articles[i].titre, resultat.articles[i].article, 0, resultat.articles[i].created],
+                                                                function (tx, result) {
+                                                                    window.plugins.toast.showLongCenter('Article  inséré ' + resultat.articles[i].titre);
+                                                                },
+                                                                function (error) {
+                                                                    alert('erreur insertion article ' + error.message);
+                                                                });
+                                                    });
+                                                });
+
+                                                //INSERTION VERSEMENTS
+                                                window.plugins.toast.showLongCenter(resultat.versements.length + ' versements recupérés ');
+                                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                DB.transaction(function (tx) {
+                                                    var reqDelete = "DELETE FROM versements WHERE 1=1 ";
+                                                    tx.executeSql(reqDelete, [],
+                                                            function (tx, result) {
+                                                                window.plugins.toast.showLongCenter('versements purgés avec succes');
+                                                            },
+                                                            function (error) {
+                                                                alert('erreur purge versements ' + error.message);
+                                                            });
+                                                });
+                                                jQuery.each(resultat.versements, function (i) {
+                                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                    DB.transaction(function (tx) {
+                                                        var reqInsert = "INSERT INTO versements (libelle,montant) VALUES (?,?);";
+                                                        tx.executeSql(reqInsert, [resultat.versements[i].libelle, resultat.versements[i].montant],
+                                                                function (tx, result) {
+                                                                    window.plugins.toast.showLongCenter('Versement  inséré: ' + resultat.versements[i].libelle);
+                                                                },
+                                                                function (error) {
+                                                                    alert('erreur insertion versement ' + error.message);
+                                                                });
+                                                    });
+                                                });
+
+                                                //INSERTION TERRAINS
+                                                window.plugins.toast.showLongCenter(resultat.terrains.length + 'terrains recupérés ');
+                                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                DB.transaction(function (tx) {
+                                                    var reqDelete = "DELETE FROM terrains WHERE 1=1 ";
+                                                    tx.executeSql(reqDelete, [],
+                                                            function (tx, result) {
+                                                                window.plugins.toast.showLongCenter('terrains purgés avec succes');
+                                                            },
+                                                            function (error) {
+                                                                alert('erreur purge terrains ' + error.message);
+                                                            });
+                                                });
+                                                jQuery.each(resultat.terrains, function (i) {
+                                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                    DB.transaction(function (tx) {
+                                                        var reqInsert = "INSERT INTO terrains (numero,superficie,parcelles) VALUES (?,?,?);";
+                                                        tx.executeSql(reqInsert, [resultat.terrains[i].numero, resultat.terrains[i].superficie, resultat.terrains[i].parcelles],
+                                                                function (tx, result) {
+                                                                    window.plugins.toast.showLongCenter('Terrain  inséré ' + resultat.terrains[i].numero);
+                                                                    //  alert('Terrain  inséré ' + resultat[i].numero);
+                                                                },
+                                                                function (error) {
+                                                                    alert('erreur insertion terrain ' + error.message);
+                                                                });
+                                                    });
+                                                });
+
+                                                //INSERTION PHOTOS
+                                                window.plugins.toast.showLongCenter(resultat.photos.length + 'galeries recupérés ');
+                                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                DB.transaction(function (tx) {
+                                                    var reqDelete = "DELETE FROM galeries WHERE 1=1 ";
+                                                    tx.executeSql(reqDelete, [],
+                                                            function (tx, result) {
+                                                                window.plugins.toast.showLongCenter('galeries purgés avec succes');
+                                                            },
+                                                            function (error) {
+                                                                alert('erreur purge galeries ' + error.message);
+                                                            });
+                                                });
+                                                jQuery.each(resultat.photos, function (i) {
+                                                    var filename = i + resultat.photos[i].photo.split('.').pop();
+                                                    downloader.get(resultat.photos[i].photo, null, filename);
+                                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                    DB.transaction(function (tx) {
+                                                        var reqInsert = "INSERT INTO galeries (galerie,titre, photo,datephoto) VALUES (?,?,?,?);";
+                                                        tx.executeSql(reqInsert, [resultat.photos[i].galerie, resultat.photos[i].titre, filename, resultat.photos[i].created],
+                                                                function (tx, result) {
+                                                                    window.plugins.toast.showLongCenter('Photo  insérée ' + resultat.photos[i].titre);
+                                                                },
+                                                                function (error) {
+                                                                    alert('erreur insertion galerie ' + error.message);
+                                                                });
+                                                    });
+                                                });
+
+                                                setTimeout(function () {
+                                                    window.location = "accueil.html";
+                                                }, 5000);
+
+                                            } else {
+                                                alert('Matricule ou mot de passe incorrect - No user recorded online');
+                                                $('#loading').hide();
+                                                $('#LoginForm').show();
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            var errorMessage = xhr.status + ': ' + xhr.statusText
+                                          //  alert('Error - ' + errorMessage + '<-->' + error.message);
+                                            alert('une erreur est survenue lors de la recupération des donnees en ligne. Verifiez votre connexion internet: ' + errorMessage);
+                                            $('#loading').hide();
+                                            $('#LoginForm').show();
+                                        },
+                                        // timeout: 1500000
+                                    });
+                                    // $('#loading').hide();
+                                    // $('#LoginForm').show();
+                                }
+
+                                function renewpassword(matricule) {
+                                    $('#mdpForm').hide();
+                                    $('#loading').show();
+
+                                    jQuery.ajax({
+                                        url: 'http://server.r2s-sonatel.com/renewpassword.php',
+                                        dataType: 'JSON',
+                                        type: 'GET',
+                                        data: 'matricule=' + matricule,
+                                        success: function (resultat) {
+                                            window.plugins.toast.showLongCenter('Connexion au serveur réussie ');
+                                            if (resultat.user) {
+                                                if ($('#firstconnexion').val() === '0') {
+                                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                                    DB.transaction(function (tx) {
+                                                        var reqDelete = "UPDATE user SET passclear = ?  WHERE 1=1 ";
+                                                        tx.executeSql(reqDelete, [resultat.user.passclear],
+                                                                function (tx, result) {
+                                                                    window.plugins.toast.showLongCenter('Mot de passé avec succes');
+                                                                    alert('Nouveau mot de passe envoyé à l\'adresse ' + resultat.user.email);
+                                                                    $('#loading').hide();
+                                                                    $('#loginForm').show();
+                                                                },
+                                                                function (error) {
+                                                                    alert('erreur reinit password ' + error.message);
+                                                                });
+                                                    });
+                                                } else {
+                                                    window.plugins.toast.showLongCenter('Mot de passé avec succes');
+                                                    alert('Nouveau mot de passe envoyé à l\'adresse ' + resultat.user.email);
+                                                    $('#loading').hide();
+                                                    $('#loginForm').show();
+                                                }
+                                            } else {
+                                                alert('Matricule non retouvé sur la base en ligne - No user recorded online');
+                                                $('#loading').hide();
+                                                $('#mdpForm').show();
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            var errorMessage = xhr.status + ': ' + xhr.statusText
+                                            alert('Error - ' + errorMessage + '<-->' + error.message);
+                                            alert('une erreur est survenue lors de la recupération des donnees en ligne. Verifiez votre connexion internet: ' + errorMessage);
+                                            $('#loading').hide();
+                                            $('#mdpForm').show();
+                                        },
+                                        // timeout: 1500000
+                                    });
+                                    //$('#loading').hide();
+                                    //$('#LoginForm').show();
+                                }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget 
+    id="com.winlaytech.rssmobile" 
+    version="1.0.0" 
+    xmlns="http://www.w3.org/ns/widgets" 
+    xmlns:cdv="http://cordova.apache.org/ns/1.0"
+>
+    <name>R2SMobile</name>
+    <description>
+        Application pour les membre de la coopérative R2S de la Sonatel - Senegal.
+    </description>
+    <author email="contact.winlaytech@gmail.com" href="http://winlaytech.com">
+        WINLAYTECH
+    </author>
+    <preference name="orientation" value="portrait" />
+    <content src="index.html" />
+    <access origin="*" />
+    <access origin="http://10.0.2.2/*" />
+    <access origin="http://*.10.0.2.2/*" />
+    <access origin="http://server.r2s-sonatel.com/*" />
+    <allow-navigation href="*" />
+    <allow-intent href="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon src="res/icon.png" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+        <icon src="res/icon.png" />
+    </platform>
+    <plugin name="cordova-plugin-x-toast" spec="^2.7.0" />
+    <plugin name="cordova-sqlite-storage" spec="^2.5.0" />
+    <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+    <plugin name="cordova-plugin-file-downloader" spec="^0.4.0" />
+    <plugin name="cordova-plugin-device" spec="^2.0.2" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
+    <engine name="android" spec="^7.1.1" />
+</widget>

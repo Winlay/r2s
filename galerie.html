@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <title>R2S</title>
+        <link rel="stylesheet" href="css/framework7.css">
+        <link rel="stylesheet" href="style.css">
+        <style>
+            .homepage {
+                background-color: #33d691;
+            }
+
+            .homenavbar h1 {
+                color: #fff;
+                font-size: 18px;
+                font-weight: 300;
+                padding: 5px 0 0 0;
+                margin: 0px;
+                float: left;
+                letter-spacing: -1px;
+            }
+
+            #pages_maincontent {
+                background-color: #FFF;
+            }
+            .terrains img{
+                width: 24px !important;
+            }
+            .terrains span{
+                color: #000 !important;
+                padding: 3px 0 0 20px !important;
+            }
+            .terrains strong {
+                width: auto !important;
+                min-width: 30px !important;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+            ul.shop_items li {
+                padding: 5px 0 5px 0;
+                margin: 0 0 0px 0;
+                display: block;
+                width: 100%;
+                float: left;
+                clear: both;
+                border-bottom: 1px solid #e4e4e4;
+                position: relative;
+            }
+
+            #listeTerrains .user-nav {
+                padding: 0px 5% 0 5%;
+                width: 97%;
+            }
+        </style>
+    </head>
+    <body id="mobile_wrap">
+        <div class="statusbar-overlay"></div>
+
+        <div class="panel-overlay"></div>
+
+
+
+        <div class="panel panel-right panel-reveal">
+            <div class="user_login_info">
+
+                <div class="user_thumb">
+                    <div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>  
+                    <div class="user_details">
+                        <p>Bienvenue <span id="userConnected">Utilisateur</span></p>
+                        <input type="hidden"  id="matricule" name="matricule" value="" />
+                    </div>  
+                    <div class="user_social">
+                        <ul>
+                            <li class="user_details" style="width: 100%; text-align: center"><p><span id="role"></span></p></li>
+                        </ul>	  
+                    </div>     
+                </div>
+
+                <nav class="user-nav">
+                    <ul>
+                        <li><a href="messages.html" class="close-panel"><img src="images/icons/white/contact.png" alt="" title="" /><span>Messages</span><strong id="nbMessages">0</strong></a></li>
+                        <li><a href="documents.html" class="close-panel"><img src="images/icons/white/form.png" alt="" title="" /><span>Documents</span><strong id="nbDocuments">0</strong></a></li>
+                        <li><a href="terrains.html" class="close-panel"><img src="images/icons/white/map.png" alt="" title="" /><span>Terrains</span><strong id="nbTerrains">0</strong></a></li>
+                        <li><a href="versements.html" class="close-panel"><img src="images/icons/white/features.png" alt="" title="" /><span>Versements</span><strong id="nbVersements"></strong></a></li>
+                        <li><a onclick="deconnexion();" href="#" ><img src="images/icons/white/lock.png" alt="" title="" /><span>Se deconnecter</span></a></li>
+                        <li><a onclick="quitter();" href="#" ><img src="images/icons/white/lock.png" alt="" title="" /><span>Quitter l'application</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="views">
+
+            <div class="view view-main">
+
+                <div style="text-align: center;margin-top: 150px; display: none" id="loading"  class="loginform">
+                    <h4 style="text-align: center"> <img src="img/logo.png" /></h4>
+                    <br/>
+                    <img src="img/loading.gif"  style="width: 100%;"/>
+                </div>
+
+                <div id="pageActu" class="pages" style="display: block">
+                    <div data-page="index" class="page homepage">
+                        <div class="page-content homepagecontent">	
+                            <div class="homenavbar">
+                                <h1><span>Résidences Sonatel </span>la Somone</h1>	
+                                <a href="#" data-panel="left" class="open-panel">
+                                    <div class="navbar_right"><img src="images/icons/white/user.png" alt="" title="" /></div>
+                                </a>			
+                                <a href="accueil.html" >
+                                    <div class="navbar_right"><img src="images/icons/white/home.png" /></div>
+                                </a>			
+                            </div>
+
+
+                            <!--div class="bottombarpages">
+                                <div class="gallery_switch">        
+                                    <a href="#" id="view13" class="switcher active"><img src="images/switch_13_active.png" alt="Grid"></a>
+                                    <a href="#" id="view12" class="switcher"><img src="images/switch_12.png" alt="Grid"></a>
+                                    <a href="#" id="view11" class="switcher"><img src="images/switch_11.png" alt="List"></a>
+                                </div>
+                            </div--> 
+
+                            <div id="pages_maincontent">
+
+                                <h2 class="page_title">GALERIE DE LA COOPERATIVE</h2>
+
+                                <div id="photosDiv" class="page_single layout_fullwidth">
+                                    <ul id="listePhotos" class="photo_gallery_13">
+                                    </ul> 
+                                </div>
+
+                                <div  id="no-internet" class="page_single layout_fullwidth" style="text-align: center; display: none"><img src="images/no-internet.png" style="margin-top: 10px;" /></div>       
+
+                                <div class="clearleft"></div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="listePopup" style="">
+            </div>
+
+        </div>
+
+        <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/framework7.js"></script>
+        <script type="text/javascript" src="js/my-app.js"></script>
+        <script type="text/javascript" src="http://server.r2s-sonatel.com/testConnection.js"></script>
+
+        <script type="text/javascript">
+
+                            document.addEventListener("deviceready", function (e) {
+                                loadgalerie();
+                                initInfosPage();
+                            }
+                            , false);
+
+                            function loadgalerie00() {
+                                var storageLocation = "";
+                                console.log(device.platform);
+                                switch (device.platform) {
+                                    case "Android":
+                                        storageLocation = 'file:///storage/emulated/0/';
+                                        break;
+                                    case "iOS":
+                                        storageLocation = cordova.file.documentsDirectory;
+                                        break;
+
+                                }
+
+                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                DB.transaction(function (tx) {
+                                    var req = "SELECT * FROM galeries;";
+                                    tx.executeSql(req, [],
+                                            function (tx, result) {
+                                                $('#loading').hide();
+                                                if (result.rows.length > 0) {
+                                                    for (var i = 0; i < result.rows.length; i++) {
+                                                        var src = result.rows.item(i).photo;
+                                                        var src = storageLocation+'r2s-galerie-folder/' + result.rows.item(i).photo;
+                                                        var photo = '<li><a data-popup=".popup-photo' + i + '" class="open-popup swipebox" rel="gallery-3" href="#" title="' + result.rows.item(i).titre + '"><img style="border: solid 2px #FFF" src="' + src + '" alt="image"/></a></li>';
+                                                        $('#listePhotos').append(photo);
+                                                        var div = '<div class="popup popup-photo' + i + '"><div class="content-block"><h4>' + result.rows.item(i).titre + '</h4><div class=""><p> <img style="width: 100%; height: auto" src="' + src + '"/></p></div></div><div class="close_popup_button"><a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div></div>';
+                                                        $('#listePopup').append(div);
+                                                    }
+                                                } else {
+                                                    $('#listePhotos').append('<div class="page_single layout_fullwidth" style="text-align: center"><img src="images/no-result-found.png" style="margin-top: 75px;" /></div>');
+                                                }
+                                            },
+                                            function (error) {
+                                                window.plugins.toast.showLongCenter('Erreur lors de la recupertion des messages');
+                                            });
+                                });
+                            }
+                            function loadgalerie() {
+                                if (typeof testConnection === 'undefined') {
+                                    for (var i = 1; i < 6; i++) {
+                                        var src = 'images/photos/' + i + '.jpeg';
+                                        var photo = '<li><a data-popup=".popup-photo' + i + '" class="open-popup swipebox" rel="gallery-3" href="#" title="PHOTO' + i + '"><img style="border: solid 2px #FFF" src="' + src + '" alt="image"/></a></li>';
+                                        $('#listePhotos').append(photo);
+                                        var div = '<div class="popup popup-photo' + i + '"><div class="content-block"><h4> PHOTO' + i + '</h4><div class=""><p> <img style="width: 100%; height: auto" src="' + src + '"/></p></div></div><div class="close_popup_button"><a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div></div>';
+                                        $('#listePopup').append(div);
+                                    }
+                                } else {
+                                    // $('#photosDiv').hide();
+                                    //$('#no-internet').show();
+                                    var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                    DB.transaction(function (tx) {
+                                        var req = "SELECT * FROM galeries;";
+                                        tx.executeSql(req, [],
+                                                function (tx, result) {
+                                                    $('#loading').hide();
+                                                    if (result.rows.length > 0) {
+                                                        for (var i = 0; i < result.rows.length; i++) {
+                                                            var src = result.rows.item(i).photo;
+                                                            var photo = '<li><a data-popup=".popup-photo' + i + '" class="open-popup swipebox" rel="gallery-3" href="#" title="' + result.rows.item(i).titre + '"><img style="border: solid 2px #FFF" src="' + src + '" alt="image"/></a></li>';
+                                                            $('#listePhotos').append(photo);
+                                                            var div = '<div class="popup popup-photo' + i + '"><div class="content-block"><h4>' + result.rows.item(i).titre + '</h4><div class=""><p> <img style="width: 100%; height: auto" src="' + src + '"/></p></div></div><div class="close_popup_button"><a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div></div>';
+                                                            $('#listePopup').append(div);
+                                                        }
+                                                    } else {
+                                                        $('#listePhotos').append('<div class="page_single layout_fullwidth" style="text-align: center"><img src="images/no-result-found.png" style="margin-top: 75px;" /></div>');
+                                                    }
+                                                },
+                                                function (error) {
+                                                    window.plugins.toast.showLongCenter('Erreur lors de la recupertion des messages');
+                                                });
+                                    });
+
+                                }
+                            }
+        </script>
+    </body>
+</html>

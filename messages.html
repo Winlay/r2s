@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <title>R2S</title>
+        <link rel="stylesheet" href="css/framework7.css">
+        <link rel="stylesheet" href="style.css">
+        <style>
+            .homepage {
+                background-color: #33d691;
+            }
+
+            .homenavbar h1 {
+                color: #fff;
+                font-size: 18px;
+                font-weight: 300;
+                padding: 5px 0 0 0;
+                margin: 0px;
+                float: left;
+                letter-spacing: -1px;
+            }
+
+            #pages_maincontent {
+                background-color: #FFF;
+            }
+
+            .modal-overlay.modal-overlay-visible, .preloader-indicator-overlay.modal-overlay-visible, .popup-overlay.modal-overlay-visible {
+                visibility: visible;
+                opacity: 0;
+            }
+            ul.features_list li span {
+                padding: 0% 0 0 5%;
+                font-weight: 700;
+            }
+        </style>
+    </head>
+    <body id="mobile_wrap">
+
+        <div class="statusbar-overlay"></div>
+
+        <div class="panel-overlay"></div>
+
+
+
+        <div class="panel panel-right panel-reveal">
+            <div class="user_login_info">
+
+                <div class="user_thumb">
+                    <div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>  
+                    <div class="user_details">
+                        <p>Bienvenue <span id="userConnected">Utilisateur</span></p>
+                        <input type="hidden"  id="matricule" name="matricule" value="" />
+                    </div>  
+                    <div class="user_social">
+                        <ul>
+                            <li class="user_details" style="width: 100%; text-align: center"><p><span id="role"></span></p></li>
+                        </ul>	  
+                    </div>     
+                </div>
+
+                <nav class="user-nav">
+                    <ul>
+                        <li><a href="messages.html" class="close-panel"><img src="images/icons/white/contact.png" alt="" title="" /><span>Messaes</span><strong id="nbMessages">0</strong></a></li>
+                        <li><a href="documents.html" class="close-panel"><img src="images/icons/white/form.png" alt="" title="" /><span>Documents</span><strong id="nbDocuments">0</strong></a></li>
+                        <li><a href="terrains.html" class="close-panel"><img src="images/icons/white/map.png" alt="" title="" /><span>Terrains</span><strong id="nbTerrains">0</strong></a></li>
+                        <li><a href="versements.html" class="close-panel"><img src="images/icons/white/features.png" alt="" title="" /><span>Versements</span><strong id="nbVersements"></strong></a></li>
+                        <li><a onclick="deconnexion();" href="#" ><img src="images/icons/white/lock.png" alt="" title="" /><span>Se deconnecter</span></a></li>
+                        <li><a onclick="quitter();" href="#" ><img src="images/icons/white/lock.png" alt="" title="" /><span>Quitter l'application</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="views">
+
+            <div class="view view-main">
+                <div id="pageActu" class="pages" style="">
+                    <div data-page="index" class="page homepage">
+                        <div class="page-content homepagecontent">	
+                            <div class="homenavbar">
+                                <h1><span>Résidences Sonatel </span>la Somone</h1>	
+                                <a href="#" data-panel="left" class="open-panel">
+                                    <div class="navbar_right"><img src="images/icons/white/user.png" alt="" title="" /></div>
+                                </a>			
+                                <a href="accueil.html" >
+                                    <div class="navbar_right"><img src="images/icons/white/home.png" /></div>
+                                </a>			
+                            </div>
+
+                            <div id="pages_maincontent">
+
+                                <h2 class="page_title" style="text-align: center">NEWS DE LA COOPERATIVE</h2>
+                                <div class="page_single layout_fullwidth_padding">	  
+
+                                    <blockquote>
+                                        Cliquez sur un message pour le visualiser<span></span>
+                                    </blockquote>  
+
+                                    <div style="text-align: center;margin-top: 100px;" id="loading"  class="loginform">
+                                        <h4 style="text-align: center"> <img src="img/logo.png" /></h4>
+                                        <br/>
+                                        <img src="img/loading.gif"  style="width: 100%;"/>
+                                    </div>
+                                    <!--h3>Short features list</h3--> 		  
+
+                                    <ul id="listeMessages" class="features_list">
+                                        <!--li><a href="#" data-popup=".popup-messageLaye" class="open-popup"><img src="images/icons/green/contact.png" alt="" title="" /><span>Test popup tettstst sttsstet ette <br/> <b style="color: red">12-12-2018 12:15</b></span><span style="float: right"> <img src="images/icons/green/contact.png" style="width: 16px;" title="Non lu"></span></a></li-->
+                                    </ul>
+
+                                    <!--a href="#" onclick="loadServerMessages();" class="button_full">Actualiser</a-->
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="listePopup" style="">
+                <!--div class="popup popup-messageLaye"><div class="content-block"><h4>Test popup</h4><div class=""><p>Contenu Popu</p></div></div><div class="close_popup_button"><a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div></div-->
+            </div>
+        </div>
+
+        <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/framework7.js"></script>
+        <script type="text/javascript" src="js/jquery.swipebox.js"></script>
+        <script type="text/javascript" src="js/my-app.js"></script>
+        <script type="text/javascript">
+
+
+
+                            document.addEventListener("deviceready", function (e) {
+                                initInfosPage();
+                                loadmessages();
+                                //setTimeout(function () {
+                                //    $('#loading').hide();
+                                //    $('#pageActu').show();
+                                //}, 1000);
+                            }
+                            , false);
+
+                            function loadmessages() {
+                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                DB.transaction(function (tx) {
+                                    var req = "SELECT * FROM messages;";
+                                    tx.executeSql(req, [],
+                                            function (tx, result) {
+                                                $('#loading').hide();
+                                                if (result.rows.length > 0) {
+                                                    for (var i = 0; i < result.rows.length; i++) {
+                                                        var icone = 'new';
+                                                        if (result.rows.item(i).lu === 1) {
+                                                            icone = 'old';
+                                                        }
+
+                                                        var message = '<li><a onclick="setLu(\'' + result.rows.item(i).id + '\');"  data-popup=".popup-message' + result.rows.item(i).id + '" class="open-popup"><img src="images/icons/green/'+icone+'-post.png" alt="" title="" /><span>' + result.rows.item(i).titre + ' <br/><b style="color: red">(' + result.rows.item(i).datemessage + ')</b></span></a></li> ';
+                                                        $('#listeMessages').append(message);
+                                                        var div = '<div class="popup popup-message' + result.rows.item(i).id + '"><div class="content-block"><h4>' + result.rows.item(i).titre + '<br/><b style="color: red">' + result.rows.item(i).datemessage + '</b></h4><div class=""><p>' + result.rows.item(i).message + '</p></div></div><div class="close_popup_button"><a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div></div>';
+                                                        $('#listePopup').append(div);
+                                                    }
+                                                } else {
+                                                    $('#listeMessages').append('<div class="page_single layout_fullwidth" style="text-align: center"><img src="images/no-result-found.png" style="margin-top: 75px;" /></div>');
+                                                }
+                                            },
+                                            function (error) {
+                                                window.plugins.toast.showLongCenter('Erreur lors de la recupertion des messages');
+                                                //alert('Erreur d\'acces aux données utilisateurs' + error.message);
+                                            });
+                                });
+                            }
+
+                            //  function createPopuDiv(id, titre, message, created) {
+                            //     var div = '<div class="popup popup-message' + id + '"><div class="close_popup_button"><a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div><h2 class="blog_title">' + titre + ' </h2>'
+                            //             + '<div class="page_single layout_fullwidth_padding"><div class="post_single"><p><img src="images/photos/news.jpg" style="float: left; max-width: 100px; margin-right: 5px !important; border: 2px #59cf84 solid; border-radius: 50px" title="">' + message + '</p><br/><span class="post_date">' + created + '</span><span class="post_author"> <a href="#">SG  de R2S</a></span></div></div></div>';
+                            //     $('#listePopup').append(div);
+                            // }
+
+                            function loadServerMessages() {
+                                $('#pageActu').hide();
+                                $('#loading').show();
+                                jQuery.ajax({
+                                    url: "http://10.0.2.2/r2s_server/liste.php?objet=alertes&matricule=".$('#matricule').val(),
+                                    dataType: 'JSON',
+                                    success: function (resultat) {
+                                        window.plugins.toast.showLongCenter(resultat.length + 'messages recupérés ');
+                                        $('#nbMessages').html(resultat.length);
+                                        var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                        DB.transaction(function (tx) {
+                                            var reqDelete = "DELETE FROM messages WHERE 1=1 ";
+                                            tx.executeSql(reqDelete, [],
+                                                    function (tx, result) {
+                                                        window.plugins.toast.showLongCenter('Messages purgés avec succes');
+                                                    },
+                                                    function (error) {
+                                                        alert('erreur purge messages ' + error.message);
+                                                    });
+                                        });
+
+                                        jQuery.each(resultat, function (i) {
+                                            var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                            DB.transaction(function (tx) {
+                                                var reqInsert = "INSERT INTO messages (titre,message,lu,datemessage) VALUES (?,?,?,?);";
+                                                tx.executeSql(reqInsert, [resultat[i].titre, resultat[i].message, 0, resultat[i].created],
+                                                        function (tx, result) {
+                                                            window.plugins.toast.showLongCenter('Message  inséré ' + resultat[i].titre);
+                                                            // alert('Message  inséré ' + resultat[i].titre);
+                                                        },
+                                                        function (error) {
+                                                            alert('erreur insertion message ' + error.message);
+                                                        });
+                                            });
+                                        });
+                                        $('#loading').hide();
+                                        $('#pageActu').show();
+                                    },
+                                    error: function () {
+                                        window.plugins.toast.showLongCenter('Messages serveur inaccessible.');
+                                        $('#loading').hide();
+                                        $('#pageActu').show();
+                                    },
+                                    // timeout: 15000
+                                });
+                            }
+
+                            function setLu(id) {
+                                var DB = window.sqlitePlugin.openDatabase({name: "my.db", location: 1});
+                                DB.transaction(function (tx) {
+                                    var reqInsert = "UPDATE messages SET lu=? WHERE id=?";
+                                    tx.executeSql(reqInsert, [1, id],
+                                            function (tx, result) {
+                                                window.plugins.toast.showLongCenter('Message lu ');
+                                            },
+                                            function (error) {
+                                                alert('erreur set message lu');
+                                            });
+                                });
+                            }
+        </script>
+    </body>
+</html>
